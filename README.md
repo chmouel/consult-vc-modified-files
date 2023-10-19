@@ -1,6 +1,6 @@
 # consult-vc-modified-files
 
-List git modified files with vc in a project
+List git modified or newly added files with vc in a project
 
 ## Installation
 
