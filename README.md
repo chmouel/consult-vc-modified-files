@@ -17,7 +17,7 @@ Using package.el (with emacs29's package-vc.el):
 ## Usage
 
 Use the interactive function `consult-vc-modified-files` or bind it to a key
-(`C-x v /` if you use the installation method aabove).
+(`C-x v /` if you use the installation method above).
 
 ## Copyright
 
