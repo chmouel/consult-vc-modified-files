@@ -8,7 +8,7 @@ Using package.el (with emacs29's package-vc.el):
 
 ```elisp
 (unless (package-installed-p 'consult-vc-modified-files)
-  (package-vc-install "https://github.com/chmouel/emacs-vc-modified-files"))
+  (package-vc-install "https://github.com/chmouel/consult-vc-modified-files"))
 (use-package consult-vc-modified-files
   :bind
   ("C-x v /" . consult-vc-modified-files))
@@ -17,6 +17,7 @@ Using package.el (with emacs29's package-vc.el):
 ## Usage
 
 Use the interactive function `consult-vc-modified-files` or bind it to a key
+(`C-x v /` if you use the installation method aabove).
 
 ## Copyright
 
