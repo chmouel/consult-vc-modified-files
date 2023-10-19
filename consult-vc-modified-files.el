@@ -40,7 +40,7 @@
   (interactive
    (list
     (let* ((default-directory (project-root (project-current)))
-           (modif-files (split-string (vc-git--run-command-string nil "ls-files" "-z" "-m") "\0" t)))
+           (modif-files (split-string (vc-git--run-command-string nil "ls-files" "-z" "-m" "-o" "--exclude-standard") "\0" t)))
       (consult--read
        modif-files
        :prompt "Modified File: "
