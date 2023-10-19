@@ -3,8 +3,15 @@
 ;; Copyright (C) 2023  Chmouel Boudjnah
 
 ;; Author: Chmouel Boudjnah <chmouel@chmouel.com>
-;; Keywords: vc
-
+;; Keywords: vc, convenience
+;; Created: 2023
+;; Version: 0.0.1
+;; Package-Requires: ((emacs "27.1") (consult "0.9"))
+;; Keywords: convenience
+;; Homepage: https://github.com/chmouel/consult-vc-modified-files
+;;
+;; This file is not part of GNU Emacs.
+;;
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation, either version 3 of the License, or
