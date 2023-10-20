@@ -14,6 +14,14 @@ Using package.el (with emacs29's package-vc.el):
   ("C-x v /" . consult-vc-modified-files))
 ```
 
+I use [general.el](https://github.com/noctuid/general.el) with a leader key in [evil](https://evil.readthedocs.io/en/latest/overview.html#) so I define them like this:
+
+
+```elisp
+(use-package consult-vc-modified-files
+  :general (general-leader '(normal) "sm" #'(consult-vc-modified-files :wk "Modified files")))
+```
+
 ## Usage
 
 Use the interactive function `consult-vc-modified-files` or bind it to a key
