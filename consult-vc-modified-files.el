@@ -72,7 +72,7 @@
                                   :history 'consult--vc-modified-files-history
                                   :sort nil)))
     (if (plist-get (cdr selected) :match)
-        (message (concat (project-root (project-current)) (car selected))))))
+        (find-file (concat (project-root (project-current)) (car selected))))))
 
 (provide 'consult-vc-modified-files)
 ;;; consult-vc-modified-files.el ends here
