@@ -1,8 +1,12 @@
 # consult-vc-modified-files
 
-List GIT modified, newly added and files from the HEAD commits using
+List git modified, newly added and files from the HEAD commits using
 [vc](https://github.com/emacs-mirror/emacs/blob/master/lisp/vc/vc.el) in a
 [project](https://github.com/emacs-mirror/emacs/blob/master/lisp/progmodes/project.el)
+
+## Screenshot
+
+![image](https://github.com/chmouel/consult-vc-modified-files/assets/98980/00272a25-a0b1-4b90-b4a8-21807ead914e)
 
 ## Installation
 
