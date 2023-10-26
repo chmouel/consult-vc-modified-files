@@ -1,6 +1,8 @@
 # consult-vc-modified-files
 
-List git modified or newly added files with vc in a project
+List GIT modified, newly added and files from the HEAD commits using
+[vc](https://github.com/emacs-mirror/emacs/blob/master/lisp/vc/vc.el) in a
+[project](https://github.com/emacs-mirror/emacs/blob/master/lisp/progmodes/project.el)
 
 ## Installation
 
