@@ -34,20 +34,45 @@
 (require 'consult)
 (require 'project)
 
-(defvar consult--vc-modified-files-history nil)
-(defun consult-vc-modified-files (file)
-  "Select a modified FILE in a project in git with consult."
-  (interactive
-   (list
-    (let* ((default-directory (project-root (project-current)))
-           (modif-files (split-string (vc-git--run-command-string nil "ls-files" "-z" "-m" "-o" "--exclude-standard") "\0" t)))
-      (consult--read
-       modif-files
-       :prompt "Modified File: "
-       :require-match t
-       :category 'vc
-       :history 'consult--vc-modified-files-history))))
-  (find-file (concat (project-root (project-current)) file)))
+(defvar consult--source-vc-head-files
+  `(:name "Modified in HEAD"
+          :category vc
+          :face     consult-vc-head-files
+          :history  consult--vc-modified-files-history
+          :items
+          (lambda () (split-string
+                      (vc-git--run-command-string nil "diff-tree" "-z"  "--no-commit-id" "--name-only" "-r" "HEAD") "\0" t))))
+
+(defvar consult--source-vc-modified-files
+  `(:name "Modified locally"
+          :category vc
+          :face     consult-vc-modified-files
+          :history  consult--vc-modified-files-history
+          :items
+          (lambda () (split-string
+                      (vc-git--run-command-string nil "ls-files" "-z" "-m" "-o" "--exclude-standard") "\0" t))))
+
+(defface consult-vc-head-files
+  '((t :inherit shadow))
+  "Face used to highlight grep context in `consult-vc-head-files'.")
+
+(defface consult-vc-modified-files
+  '((t))
+  "Face used to highlight buffers in `consult-vc-modified-files'.")
+
+(defvar consult--vc-modified-files-source
+  '(consult--source-vc-modified-files
+    consult--source-vc-head-files))
+
+(defun consult-vc-modified-files (&optional sources)
+  (interactive)
+  (let ((default-directory (project-root (project-current)))
+        (selected (consult--multi (or sources consult--vc-modified-files-source)
+                                  :prompt "Choose a file: "
+                                  :history 'consult--vc-modified-files-history
+                                  :sort nil)))
+    (if (plist-get (cdr selected) :match)
+        (message (concat (project-root (project-current)) (car selected))))))
 
 (provide 'consult-vc-modified-files)
 ;;; consult-vc-modified-files.el ends here
