@@ -27,8 +27,8 @@
 
 ;;; Commentary:
 
-;; Simply show modified files from a Git repository to select and with consult
-;; and open with find-files
+;; Show modified and added files from a Git repository and show the files from the HEAD commits as another sources with consult
+;; open the file with find-files
 
 ;;; Code:
 (require 'consult)
@@ -40,8 +40,10 @@
           :face     consult-vc-head-files
           :history  consult--vc-modified-files-history
           :items
-          (lambda () (split-string
-                      (vc-git--run-command-string nil "diff-tree" "-z"  "--no-commit-id" "--name-only" "-r" "HEAD") "\0" t))))
+          (lambda ()
+            (let ((default-directory (project-root (project-current t))))
+              (split-string
+               (vc-git--run-command-string nil "diff-tree" "-z"  "--no-commit-id" "--name-only" "-r" "HEAD") "\0" t)))))
 
 (defvar consult--source-vc-modified-files
   `(:name "Modified locally"
@@ -49,8 +51,10 @@
           :face     consult-vc-modified-files
           :history  consult--vc-modified-files-history
           :items
-          (lambda () (split-string
-                      (vc-git--run-command-string nil "ls-files" "-z" "-m" "-o" "--exclude-standard") "\0" t))))
+          (lambda ()
+            (let ((default-directory (project-root (project-current t))))
+              (split-string
+               (vc-git--run-command-string nil "ls-files" "-z" "-m" "-o" "--exclude-standard") "\0" t)))))
 
 (defface consult-vc-head-files
   '((t :inherit shadow))
