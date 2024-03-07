@@ -33,6 +33,7 @@
 ;;; Code:
 (require 'consult)
 (require 'project)
+(require 'vc)
 
 (defvar consult--source-vc-head-files
   `(:name "Modified in HEAD"
