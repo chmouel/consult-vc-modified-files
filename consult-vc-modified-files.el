@@ -27,57 +27,74 @@
 
 ;;; Commentary:
 
-;; Show modified and added files from a Git repository and show the files from the HEAD commits as another sources with consult
-;; open the file with find-files
+;; Show modified and added files from a Git repository and show the files from
+;; the HEAD commits as another sources with consult open the file with
+;; find-files
 
 ;;; Code:
 (require 'consult)
 (require 'project)
 (require 'vc-git)
 
-(defvar consult--source-vc-head-files
+(defcustom consult-vc-modified-files-sources
+  '(consult-vc-modified-source-files
+    consult-vc-modified-source-head-files)
+  "Sources for modified and HEAD files in the current Git project.
+
+This variable defines the file sources used by `consult-vc-modified-files`.
+You can customize this list to add or remove sources as needed."
+  :type '(repeat (choice (const :tag "Modified locally" consult-vc-modified-source-files)
+                         (const :tag "Modified in HEAD" consult-vc-modified-source-head-files)))
+  :group 'consult-vc-modified)
+
+(defface consult-vc-modified-head-files-face
+  '((t :inherit shadow))
+  "Face for files modified in HEAD.")
+
+(defface consult-vc-modified-files-face
+  '((t :inherit default))
+  "Face for locally modified files.")
+
+(defvar consult-vc-modified-files-history nil
+  "History for `consult-vc-modified-files`.")
+
+(defun consult-vc-modified-get-files (&rest args)
+  "Run a Git command with ARGS and return the output as a list of files."
+  (let ((default-directory (project-root (project-current t))))
+    (if (vc-git-root default-directory)
+        (split-string
+         (apply #'vc-git--run-command-string "" args) "\0" t)
+      '())))
+
+(defvar consult-vc-modified-source-head-files
   `(:name "Modified in HEAD"
           :category vc
-          :face     consult-vc-head-files
-          :history  consult--vc-modified-files-history
-          :items
-          (lambda ()
-            (let ((default-directory (project-root (project-current t))))
-              (split-string
-               (vc-git--run-command-string nil "diff-tree" "-z"  "--no-commit-id" "--name-only" "-r" "HEAD") "\0" t)))))
+          :face consult-vc-modified-head-files-face
+          :history consult-vc-modified-files-history
+          :items (lambda () (consult-vc-modified-get-files "diff-tree" "-z" "--no-commit-id" "--name-only" "-r" "HEAD"))))
 
-(defvar consult--source-vc-modified-files
+(defvar consult-vc-modified-source-files
   `(:name "Modified locally"
           :category vc
-          :face     consult-vc-modified-files
-          :history  consult--vc-modified-files-history
-          :items
-          (lambda ()
-            (let ((default-directory (project-root (project-current t))))
-              (split-string
-               (vc-git--run-command-string nil "ls-files" "-z" "-m" "-o" "--exclude-standard") "\0" t)))))
-
-(defface consult-vc-head-files
-  '((t :inherit shadow))
-  "Face used to highlight grep context in `consult-vc-head-files'.")
-
-(defface consult-vc-modified-files
-  '((t))
-  "Face used to highlight buffers in `consult-vc-modified-files'.")
-
-(defvar consult--vc-modified-files-source
-  '(consult--source-vc-modified-files
-    consult--source-vc-head-files))
+          :face consult-vc-modified-files-face
+          :history consult-vc-modified-files-history
+          :items (lambda () (consult-vc-modified-get-files "ls-files" "-z" "-m" "-o" "--exclude-standard"))))
 
 (defun consult-vc-modified-files (&optional sources)
+  "Prompt user to select a modified file from the project and open it.
+SOURCES defaults to `consult-vc-modified-files-sources`."
   (interactive)
-  (let ((default-directory (project-root (project-current)))
-        (selected (consult--multi (or sources consult--vc-modified-files-source)
-                                  :prompt "Choose a file: "
-                                  :history 'consult--vc-modified-files-history
-                                  :sort nil)))
-    (if (plist-get (cdr selected) :match)
-        (find-file (concat (project-root (project-current)) (car selected))))))
+  (let ((project (project-current t)))
+    (if project
+        (let* ((default-directory (project-root project))
+               (selected (consult--multi (or sources consult-vc-modified-files-sources)
+                                         :prompt "Choose a file: "
+                                         :history 'consult-vc-modified-files-history
+                                         :sort nil)))
+          (if selected
+              (find-file (expand-file-name (car selected) default-directory))
+            (message "No files selected or no modifications found.")))
+      (error "No project found"))))
 
 (provide 'consult-vc-modified-files)
 ;;; consult-vc-modified-files.el ends here
