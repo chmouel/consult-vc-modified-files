@@ -6,7 +6,7 @@
 ;; Keywords: vc, convenience
 ;; Created: 2023
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "27.1") (consult "0.9"))
+;; Package-Requires: ((emacs "28.1") (consult "0.9"))
 ;; Keywords: convenience
 ;; Homepage: https://github.com/chmouel/consult-vc-modified-files
 ;;
@@ -37,17 +37,17 @@
 (require 'vc-git)
 
 (defcustom consult-vc-modified-files-sources
-  '(consult-vc-modified-source-files
-    consult-vc-modified-source-head-files)
+  '(consult-vc-modified-files-source-files
+    consult-vc-modified-files-source-head-files)
   "Sources for modified and HEAD files in the current Git project.
 
 This variable defines the file sources used by `consult-vc-modified-files`.
 You can customize this list to add or remove sources as needed."
-  :type '(repeat (choice (const :tag "Modified locally" consult-vc-modified-source-files)
-                         (const :tag "Modified in HEAD" consult-vc-modified-source-head-files)))
+  :type '(repeat (choice (const :tag "Modified locally" consult-vc-modified-files-source-files)
+                         (const :tag "Modified in HEAD" consult-vc-modified-files-source-head-files)))
   :group 'consult-vc-modified)
 
-(defface consult-vc-modified-head-files-face
+(defface consult-vc-modified-files-head-files-face
   '((t :inherit shadow))
   "Face for files modified in HEAD.")
 
@@ -58,7 +58,7 @@ You can customize this list to add or remove sources as needed."
 (defvar consult-vc-modified-files-history nil
   "History for `consult-vc-modified-files`.")
 
-(defun consult-vc-modified-get-files (&rest args)
+(defun consult-vc-modified-files-get-files (&rest args)
   "Run a Git command with ARGS and return the output as a list of files."
   (let ((default-directory (project-root (project-current t))))
     (if (vc-git-root default-directory)
@@ -66,19 +66,19 @@ You can customize this list to add or remove sources as needed."
          (apply #'vc-git--run-command-string "" args) "\0" t)
       '())))
 
-(defvar consult-vc-modified-source-head-files
+(defvar consult-vc-modified-files-source-head-files
   `(:name "Modified in HEAD"
           :category vc
-          :face consult-vc-modified-head-files-face
+          :face consult-vc-modified-files-head-files-face
           :history consult-vc-modified-files-history
-          :items (lambda () (consult-vc-modified-get-files "diff-tree" "-z" "--no-commit-id" "--name-only" "-r" "HEAD"))))
+          :items (lambda () (consult-vc-modified-files-get-files "diff-tree" "-z" "--no-commit-id" "--name-only" "-r" "HEAD"))))
 
-(defvar consult-vc-modified-source-files
+(defvar consult-vc-modified-files-source-files
   `(:name "Modified locally"
           :category vc
           :face consult-vc-modified-files-face
           :history consult-vc-modified-files-history
-          :items (lambda () (consult-vc-modified-get-files "ls-files" "-z" "-m" "-o" "--exclude-standard"))))
+          :items (lambda () (consult-vc-modified-files-get-files "ls-files" "-z" "-m" "-o" "--exclude-standard"))))
 
 (defun consult-vc-modified-files (&optional sources)
   "Prompt user to select a modified file from the project and open it.
