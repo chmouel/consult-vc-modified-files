@@ -5,7 +5,7 @@
 ;; Author: Chmouel Boudjnah <chmouel@chmouel.com>
 ;; Keywords: vc, convenience
 ;; Created: 2023
-;; Version: 0.0.1
+;; Version: 0.0.2
 ;; Package-Requires: ((emacs "28.1") (consult "0.9"))
 ;; Keywords: convenience
 ;; Homepage: https://github.com/chmouel/consult-vc-modified-files
