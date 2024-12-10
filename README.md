@@ -1,8 +1,17 @@
 # consult-vc-modified-files
 
-List git modified, newly added and files from the HEAD commits using
-[vc](https://www.gnu.org/software/emacs/manual/html_node/emacs/Version-Control.html) in a
-[project](https://github.com/emacs-mirror/emacs/blob/master/lisp/progmodes/project.el)
+`consult-vc-modified-files` provides a easy way to list Git-tracked files that have been modified, newly added, or are part of the HEAD commit in a project.
+
+It integrates with Emacs' built-in [vc](https://www.gnu.org/software/emacs/manual/html_node/emacs/Version-Control.html) and
+[project](https://github.com/emacs-mirror/emacs/blob/master/lisp/progmodes/project.el) libraries,
+as well as the [consult](https://github.com/minad/consult) package for navigation.
+
+## Features
+
+- View **locally modified** and **newly added** files in the current Git project.
+- List files from the HEAD commit.
+- Customize sources for specific use cases.
+- Navigate the open files with `consult`.
 
 ## Screenshot
 
@@ -10,7 +19,7 @@ List git modified, newly added and files from the HEAD commits using
 
 ## Installation
 
-Using package.el (with emacs29's package-vc.el):
+### Using `package.el` (with Emacs 29's `package-vc.el`)
 
 ```elisp
 (unless (package-installed-p 'consult-vc-modified-files)
@@ -20,28 +29,56 @@ Using package.el (with emacs29's package-vc.el):
   ("C-x v /" . consult-vc-modified-files))
 ```
 
-I use [general.el](https://github.com/noctuid/general.el) with a leader key in [evil](https://evil.readthedocs.io/en/latest/overview.html#) so I define them like this:
+### Example Configuration with `general.el` and `evil`
+
+If you're using [general.el](https://github.com/noctuid/general.el) with a leader key in [evil](https://evil.readthedocs.io/en/latest/overview.html#):
 
 ```elisp
 (use-package consult-vc-modified-files
-  :general (general-leader '(normal) "sm" #'(consult-vc-modified-files :wk "Modified files")))
+  :general
+  (general-leader '(normal) "sm" #'consult-vc-modified-files :wk "Modified files"))
 ```
 
 ## Usage
 
-Use the interactive function `consult-vc-modified-files` or bind it to a key
-(`C-x v /` if you use the installation method above).
+Call the interactive function `consult-vc-modified-files`, or use a key binding
+like `C-x v /` (if configured with the configuration above).
 
-## Copyright
+When invoked, the command show a prompt for selecting files based on customizable sources:
 
-### License
+- **Modified locally**: Lists locally modified or untracked files.
+- **Modified in HEAD**: Lists files modified in the HEAD commit.
 
-[GPL-3.0](./LICENSE)
+You can customize the available sources using the
+`consult-vc-modified-files-sources` variable.
+
+## Customization
+
+### Configure Sources
+
+Customize `consult-vc-modified-files-sources` to control which file categories appear in the selection. For example:
+
+```elisp
+(setq consult-vc-modified-files-sources
+      '(consult-vc-modified-source-files
+        consult-vc-modified-source-head-files))
+```
+
+### Customize Faces
+
+Adjust the appearance of listed files by customizing:
+
+- `consult-vc-modified-files-face`: For locally modified files.
+- `consult-vc-modified-head-files-face`: For files modified in HEAD.
 
 ## Authors
 
 ### Chmouel Boudjnah
 
-- Fediverse - <[@chmouel@chmouel.com](https://fosstodon.org/@chmouel)>
-- Twitter - <[@chmouel](https://twitter.com/chmouel)>
-- Blog - <[https://blog.chmouel.com](https://blog.chmouel.com)>
+- **Fediverse**: [@chmouel@chmouel.com](https://fosstodon.org/@chmouel)
+- **Twitter**: [@chmouel](https://twitter.com/chmouel)
+- **Blog**: [https://blog.chmouel.com](https://blog.chmouel.com)
+
+## License
+
+This project is licensed under the [GPL-3.0](./LICENSE).
