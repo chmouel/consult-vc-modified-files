@@ -1,7 +1,7 @@
 # consult-vc-modified-files
 
 List git modified, newly added and files from the HEAD commits using
-[vc](https://github.com/emacs-mirror/emacs/blob/master/lisp/vc/vc.el) in a
+[vc](https://www.gnu.org/software/emacs/manual/html_node/emacs/Version-Control.html) in a
 [project](https://github.com/emacs-mirror/emacs/blob/master/lisp/progmodes/project.el)
 
 ## Screenshot
@@ -21,7 +21,6 @@ Using package.el (with emacs29's package-vc.el):
 ```
 
 I use [general.el](https://github.com/noctuid/general.el) with a leader key in [evil](https://evil.readthedocs.io/en/latest/overview.html#) so I define them like this:
-
 
 ```elisp
 (use-package consult-vc-modified-files
