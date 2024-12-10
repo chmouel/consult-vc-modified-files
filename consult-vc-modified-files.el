@@ -58,14 +58,6 @@ You can customize this list to add or remove sources as needed."
 (defvar consult-vc-modified-files-history nil
   "History for `consult-vc-modified-files`.")
 
-(defun consult-vc-modified-files-get-files (&rest args)
-  "Run a Git command with ARGS and return the output as a list of files."
-  (let ((default-directory (project-root (project-current t))))
-    (if (vc-git-root default-directory)
-        (split-string
-         (apply #'vc-git--run-command-string "" args) "\0" t)
-      '())))
-
 (defvar consult-vc-modified-files-source-head-files
   `(:name "Modified in HEAD"
           :category vc
@@ -79,6 +71,14 @@ You can customize this list to add or remove sources as needed."
           :face consult-vc-modified-files-face
           :history consult-vc-modified-files-history
           :items (lambda () (consult-vc-modified-files-get-files "ls-files" "-z" "-m" "-o" "--exclude-standard"))))
+
+(defun consult-vc-modified-files-get-files (&rest args)
+  "Run a Git command with ARGS and return the output as a list of files."
+  (let ((default-directory (project-root (project-current t))))
+    (if (vc-git-root default-directory)
+        (split-string
+         (apply #'vc-git--run-command-string "" args) "\0" t)
+      '())))
 
 (defun consult-vc-modified-files (&optional sources)
   "Prompt user to select a modified file from the project and open it.
