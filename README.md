@@ -19,24 +19,13 @@ as well as the [consult](https://github.com/minad/consult) package for navigatio
 
 ## Installation
 
-### Using `package.el` (with Emacs 29's `package-vc.el`)
+### Using `use-package` from MELPA
 
 ```elisp
-(unless (package-installed-p 'consult-vc-modified-files)
-  (package-vc-install "https://github.com/chmouel/consult-vc-modified-files"))
 (use-package consult-vc-modified-files
   :bind
+  ;; choose any other key binding you prefer
   ("C-x v /" . consult-vc-modified-files))
-```
-
-### Example Configuration with `general.el` and `evil`
-
-If you're using [general.el](https://github.com/noctuid/general.el) with a leader key in [evil](https://evil.readthedocs.io/en/latest/overview.html#):
-
-```elisp
-(use-package consult-vc-modified-files
-  :general
-  (general-leader '(normal) "sm" #'consult-vc-modified-files :wk "Modified files"))
 ```
 
 ## Usage
