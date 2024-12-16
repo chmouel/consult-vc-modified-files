@@ -19,7 +19,7 @@ as well as the [consult](https://github.com/minad/consult) package for navigatio
 
 ## Installation
 
-### Using `use-package` from MELPA
+### Using `use-package` and [MELPA](https://melpa.org/)
 
 ```elisp
 (use-package consult-vc-modified-files
