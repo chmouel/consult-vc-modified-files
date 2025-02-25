@@ -21,6 +21,12 @@ as well as the [consult](https://github.com/minad/consult) package for navigatio
 
 ![image](https://github.com/chmouel/consult-vc-modified-files/assets/98980/00272a25-a0b1-4b90-b4a8-21807ead914e)
 
+### Preview with git show the HEAD files and git diff the modified files
+
+https://github.com/user-attachments/assets/daa339f0-0311-4444-a3a7-a720335b6e4d
+
+
+
 ## 📥 Installation
 
 ### Using `use-package` and [MELPA](https://melpa.org/)
