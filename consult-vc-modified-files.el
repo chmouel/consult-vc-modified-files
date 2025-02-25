@@ -5,7 +5,7 @@
 ;; Author: Chmouel Boudjnah <chmouel@chmouel.com>
 ;; Keywords: vc, convenience
 ;; Created: 2023
-;; Version: 0.0.3
+;; Version: 0.0.4
 ;; Package-Requires: ((emacs "28.1") (consult "0.9"))
 ;; Keywords: convenience
 ;; Homepage: https://github.com/chmouel/consult-vc-modified-files
@@ -60,16 +60,18 @@ You can customize this list to add or remove sources as needed."
 
 (defvar consult-vc-modified-files-source-head-files
   `( :name "Modified in HEAD"
-     :category vc
+     :category file
      :face consult-vc-modified-files-head-files-face
      :history consult-vc-modified-files-history
+     :state    ,#'consult--file-preview
      :items (lambda () (consult-vc-modified-files-get-files "diff-tree" "-z" "--no-commit-id" "--name-only" "-r" "HEAD"))))
 
 (defvar consult-vc-modified-files-source-files
   `( :name "Modified locally"
-     :category vc
+     :category file
      :face consult-vc-modified-files-face
      :history consult-vc-modified-files-history
+     :state   ,#'consult--file-preview
      :items (lambda () (consult-vc-modified-files-get-files "ls-files" "-z" "-m" "-o" "--exclude-standard"))))
 
 (defun consult-vc-modified-files-get-files (&rest args)
@@ -90,6 +92,7 @@ SOURCES defaults to `consult-vc-modified-files-sources`."
                (selected (consult--multi (or sources consult-vc-modified-files-sources)
                                          :prompt "Choose a file: "
                                          :history 'consult-vc-modified-files-history
+                                         :category 'file
                                          :sort nil)))
           (if selected
               (find-file (expand-file-name (car selected) default-directory))
