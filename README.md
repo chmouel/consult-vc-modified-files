@@ -54,9 +54,7 @@ You can customize the available sources using the
 ## 🔮 Preview Features
 
 - 📊 **Live diff preview**: See the changes in each file as you navigate through options
-- 🔄 **Smart buffer management**: Preview windows are properly cleaned up
-- ⚡ **Fast performance**: Uses native git commands for efficient operation
-- 🌈 **Syntax highlighting**: Previews use diff-mode for better readability
+- 🌈 **Syntax highlighting**: Previews use diff-mode
 
 ## ⚙️ Customization
 
