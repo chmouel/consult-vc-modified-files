@@ -1,4 +1,5 @@
 [![MELPA](https://melpa.org/packages/consult-vc-modified-files-badge.svg)](https://melpa.org/#/consult-vc-modified-files)
+
 # consult-vc-modified-files
 
 `consult-vc-modified-files` provides a easy way to list Git-tracked files that have been modified, newly added, or are part of the HEAD commit in a project.
@@ -72,4 +73,3 @@ Adjust the appearance of listed files by customizing:
 ## License
 
 This project is licensed under the [GPL-3.0](./LICENSE).
-aaaa
