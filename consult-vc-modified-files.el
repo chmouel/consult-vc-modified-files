@@ -5,7 +5,7 @@
 ;; Author: Chmouel Boudjnah <chmouel@chmouel.com>
 ;; Keywords: vc, convenience
 ;; Created: 2023
-;; Version: 0.0.7
+;; Version: 0.0.8
 ;; Package-Requires: ((emacs "28.1") (consult "0.9"))
 ;; Keywords: convenience
 ;; Homepage: https://github.com/chmouel/consult-vc-modified-files
@@ -110,26 +110,13 @@ Uses the same buffer management approach as `consult--buffer-preview`."
 
 (defun consult-vc-modified-files--git-diff-preview ()
   "Create preview function for modified files.
-Uses vc-git diff for modified files and consult--file-preview for new files."
-  (let ((file-preview (consult--file-preview))
-        (diff-preview (consult-vc-files--git-preview "diff" "*vc-diff-preview*")))
-    (lambda (action cand)
-      (if (and cand (not (string-empty-p cand)))
-          ;; Check if the file is new by running git status
-          (let ((is-new-file nil)
-                (default-directory (project-root (project-current t))))
-            ;; Determine if the file is new (untracked)
-            (with-temp-buffer
-              (vc-git-command t nil nil "status" "--porcelain" "--" cand)
-              (goto-char (point-min))
-              (setq is-new-file (looking-at-p "\\?\\? ")))
-            
-            ;; Use appropriate preview function
-            (if is-new-file
-                (funcall file-preview action cand)
-              (funcall diff-preview action cand)))
-        ;; Handle nil/empty candidate case
-        (funcall diff-preview action cand)))))
+Uses vc-git diff for modified files."
+  (consult-vc-files--git-preview "diff" "*vc-diff-preview*"))
+
+(defun consult-vc-modified-files--new-file-preview ()
+  "Create preview function for new (untracked) files.
+Uses consult--file-preview for new files."
+  (consult--file-preview))
 
 (defun consult-vc-modified-files--git-diff-cached-preview ()
   "Create preview function for staged files, using vc-git for diff --cached."
@@ -137,13 +124,15 @@ Uses vc-git diff for modified files and consult--file-preview for new files."
 
 (defcustom consult-vc-modified-files-sources
   '(consult-vc-modified-files-source-files
+    consult-vc-modified-files-source-added-files
     consult-vc-modified-files-source-staged-files
     consult-vc-modified-files-source-head-files)
-  "Sources for modified, staged, and HEAD files in the current Git project.
+  "Sources for modified, added, staged, and HEAD files in the current Git project.
 
 This variable defines the file sources used by `consult-vc-modified-files`.
 You can customize this list to add or remove sources as needed."
   :type '(repeat (choice (const :tag "Modified locally" consult-vc-modified-files-source-files)
+                         (const :tag "Added (untracked)" consult-vc-modified-files-source-added-files)
                          (const :tag "Staged for commit" consult-vc-modified-files-source-staged-files)
                          (const :tag "Modified in HEAD" consult-vc-modified-files-source-head-files)))
   :group 'consult-vc-modified)
@@ -155,6 +144,10 @@ You can customize this list to add or remove sources as needed."
 (defface consult-vc-modified-files-face
   '((t :inherit default))
   "Face for locally modified files.")
+
+(defface consult-vc-modified-files-added-face
+  '((t :inherit font-lock-variable-name-face))
+  "Face for new (untracked) files.")
 
 (defface consult-vc-modified-files-staged-face
   '((t :inherit success))
@@ -179,7 +172,16 @@ You can customize this list to add or remove sources as needed."
      :narrow   ?\l
      :history consult-vc-modified-files-history
      :state ,#'consult-vc-modified-files--git-diff-preview
-     :items (lambda () (consult-vc-modified-files-get-files "ls-files" "-z" "-m" "-o" "--exclude-standard"))))
+     :items (lambda () (consult-vc-modified-files-get-files "ls-files" "-z" "-m"))))
+
+(defvar consult-vc-modified-files-source-added-files
+  `( :name "Added files"
+     :category file
+     :face consult-vc-modified-files-added-face
+     :narrow   ?\a
+     :history consult-vc-modified-files-history
+     :state ,#'consult-vc-modified-files--new-file-preview
+     :items (lambda () (consult-vc-modified-files-get-files "ls-files" "-z" "-o" "--exclude-standard"))))
 
 (defvar consult-vc-modified-files-source-staged-files
   `( :name "Staged for commit"

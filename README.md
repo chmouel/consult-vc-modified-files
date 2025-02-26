@@ -10,8 +10,9 @@ as well as the [consult](https://github.com/minad/consult) package for navigatio
 
 ## ✨ Features
 
-- 📄 View **locally modified** and **newly added** files in the current Git project
+- 📄 View **locally modified** files in the current Git project
 - 📦 List files from the HEAD commit
+- 🆕 List newly added (untracked) files separately
 - 📋 Show files **staged for commit** in the Git staging area
 - 🛠️ Customize sources for specific use cases
 - 🧭 Navigate the open files with `consult`
@@ -20,6 +21,7 @@ as well as the [consult](https://github.com/minad/consult) package for navigatio
 - 🧵 Narrow to the right type of files with the `consult-narrow-key` (`>` by
   default):
   * `h` for modified in HEAD
+  * `a` added (untracked) files
   * `l` modified locally
   * `c` staged for commit.
 
@@ -50,6 +52,7 @@ like `C-x v /` (if configured with the configuration above).
 When invoked, the command show a prompt for selecting files based on customizable sources:
 
 - 🔄 **Modified locally**: Lists locally modified or untracked files
+- 🆕 **Added files**: Lists new untracked files
 - 📋 **Staged for commit**: Lists files added to the Git staging area
 - 📦 **Modified in HEAD**: Lists files modified in the HEAD commit
 
@@ -65,14 +68,28 @@ You can customize the available sources using the
 
 ### Configure Sources
 
-Customize `consult-vc-modified-files-sources` to control which file categories appear in the selection. For example:
+You can customize which file categories appear in the selection when using
+`consult-vc-modified-files` by setting the `consult-vc-modified-files-sources`
+variable. This allows you to control exactly which types of files are presented
+in the interface.
+
+For example, if you want to show all modified files *except* those modified in
+branch heads:
 
 ```elisp
 (setq consult-vc-modified-files-sources
-      '(consult-vc-modified-source-files
-        consult-vc-modified-files-source-staged-files
-        consult-vc-modified-source-head-files))
+      '(consult-vc-modified-files-source-modified-files
+        consult-vc-modified-files-source-added-files
+        consult-vc-modified-files-source-staged-files))
 ```
+
+This configuration includes:
+
+* Modified files (tracked files with changes)
+* Added files (new untracked files)
+* Staged files (changes ready for commit)
+
+But it excludes files modified in branch heads.
 
 ### Customize Faces
 
@@ -80,6 +97,7 @@ Adjust the appearance of listed files by customizing:
 
 - 🎨 `consult-vc-modified-files-face`: For locally modified files
 - 🎭 `consult-vc-modified-head-files-face`: For files modified in HEAD
+- 🚩 `consult-vc-modified-files-added-face`: For new (untracked) files
 - 📋 `consult-vc-modified-files-staged-face`: For files staged for commit
 
 ## 👥 Authors
