@@ -5,7 +5,7 @@
 ;; Author: Chmouel Boudjnah <chmouel@chmouel.com>
 ;; Keywords: vc, convenience
 ;; Created: 2023
-;; Version: 0.0.6
+;; Version: 0.0.7
 ;; Package-Requires: ((emacs "28.1") (consult "0.9"))
 ;; Keywords: convenience
 ;; Homepage: https://github.com/chmouel/consult-vc-modified-files
@@ -109,8 +109,27 @@ Uses the same buffer management approach as `consult--buffer-preview`."
   (consult-vc-files--git-preview "show" "*git-show-preview*"))
 
 (defun consult-vc-modified-files--git-diff-preview ()
-  "Create preview function for modified files, using vc-git for diff."
-  (consult-vc-files--git-preview "diff" "*vc-diff-preview*"))
+  "Create preview function for modified files.
+Uses vc-git diff for modified files and consult--file-preview for new files."
+  (let ((file-preview (consult--file-preview))
+        (diff-preview (consult-vc-files--git-preview "diff" "*vc-diff-preview*")))
+    (lambda (action cand)
+      (if (and cand (not (string-empty-p cand)))
+          ;; Check if the file is new by running git status
+          (let ((is-new-file nil)
+                (default-directory (project-root (project-current t))))
+            ;; Determine if the file is new (untracked)
+            (with-temp-buffer
+              (vc-git-command t nil nil "status" "--porcelain" "--" cand)
+              (goto-char (point-min))
+              (setq is-new-file (looking-at-p "\\?\\? ")))
+            
+            ;; Use appropriate preview function
+            (if is-new-file
+                (funcall file-preview action cand)
+              (funcall diff-preview action cand)))
+        ;; Handle nil/empty candidate case
+        (funcall diff-preview action cand)))))
 
 (defun consult-vc-modified-files--git-diff-cached-preview ()
   "Create preview function for staged files, using vc-git for diff --cached."
@@ -157,7 +176,7 @@ You can customize this list to add or remove sources as needed."
      :category file
      :face consult-vc-modified-files-face
      :history consult-vc-modified-files-history
-     :state    ,#'consult-vc-modified-files--git-diff-preview
+     :state ,#'consult-vc-modified-files--git-diff-preview
      :items (lambda () (consult-vc-modified-files-get-files "ls-files" "-z" "-m" "-o" "--exclude-standard"))))
 
 (defvar consult-vc-modified-files-source-staged-files

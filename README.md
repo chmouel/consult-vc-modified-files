@@ -24,9 +24,7 @@ as well as the [consult](https://github.com/minad/consult) package for navigatio
 
 ### Preview with git show the HEAD files and git diff the modified files
 
-https://github.com/user-attachments/assets/daa339f0-0311-4444-a3a7-a720335b6e4d
-
-
+<https://github.com/user-attachments/assets/daa339f0-0311-4444-a3a7-a720335b6e4d>
 
 ## 📥 Installation
 
