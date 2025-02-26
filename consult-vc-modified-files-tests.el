@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2025
 
-;; Author: Your Name <your.email@example.com>
+;; Author: Chmouel Boudjnah <chmouel@chmouel.com>
 ;; Keywords: vc, convenience, tests
 
 ;; This program is free software; you can redistribute it and/or modify
