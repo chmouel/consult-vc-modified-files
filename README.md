@@ -12,10 +12,11 @@ as well as the [consult](https://github.com/minad/consult) package for navigatio
 
 - 📄 View **locally modified** and **newly added** files in the current Git project
 - 📦 List files from the HEAD commit
+- 📋 Show files **staged for commit** in the Git staging area
 - 🛠️ Customize sources for specific use cases
 - 🧭 Navigate the open files with `consult`
 - 👁️ Preview the diff or the commit for the current selection
-- 🔄 Smart preview window management (no more duplicate preview windows!)
+- 🔄 Smart preview window management (no more duplicate preview windows!
 
 ## 📸 Screenshot
 
@@ -46,6 +47,7 @@ like `C-x v /` (if configured with the configuration above).
 When invoked, the command show a prompt for selecting files based on customizable sources:
 
 - 🔄 **Modified locally**: Lists locally modified or untracked files
+- 📋 **Staged for commit**: Lists files added to the Git staging area
 - 📦 **Modified in HEAD**: Lists files modified in the HEAD commit
 
 You can customize the available sources using the
@@ -65,6 +67,7 @@ Customize `consult-vc-modified-files-sources` to control which file categories a
 ```elisp
 (setq consult-vc-modified-files-sources
       '(consult-vc-modified-source-files
+        consult-vc-modified-files-source-staged-files
         consult-vc-modified-source-head-files))
 ```
 
@@ -74,12 +77,13 @@ Adjust the appearance of listed files by customizing:
 
 - 🎨 `consult-vc-modified-files-face`: For locally modified files
 - 🎭 `consult-vc-modified-head-files-face`: For files modified in HEAD
+- 📋 `consult-vc-modified-files-staged-face`: For files staged for commit
 
 ## 👥 Authors
 
 ### Chmouel Boudjnah
 
-- 🐘 **Fediverse**: [@chmouel@chmouel.com](https://fosstodon.org/@chmouel)
+- 🐘 **Fediverse**: [@chmouel@chmouel.com](https://fosstodon.org/@chmouel) (preferred)
 - 🐦 **Twitter**: [@chmouel](https://twitter.com/chmouel)
 - 📝 **Blog**: [https://blog.chmouel.com](https://blog.chmouel.com)
 

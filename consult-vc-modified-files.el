@@ -5,7 +5,7 @@
 ;; Author: Chmouel Boudjnah <chmouel@chmouel.com>
 ;; Keywords: vc, convenience
 ;; Created: 2023
-;; Version: 0.0.5
+;; Version: 0.0.6
 ;; Package-Requires: ((emacs "28.1") (consult "0.9"))
 ;; Keywords: convenience
 ;; Homepage: https://github.com/chmouel/consult-vc-modified-files
@@ -112,14 +112,20 @@ Uses the same buffer management approach as `consult--buffer-preview`."
   "Create preview function for modified files, using vc-git for diff."
   (consult-vc-files--git-preview "diff" "*vc-diff-preview*"))
 
+(defun consult-vc-modified-files--git-diff-cached-preview ()
+  "Create preview function for staged files, using vc-git for diff --cached."
+  (consult-vc-files--git-preview "diff" "*vc-diff-staged-preview*" '("--cached")))
+
 (defcustom consult-vc-modified-files-sources
   '(consult-vc-modified-files-source-files
+    consult-vc-modified-files-source-staged-files
     consult-vc-modified-files-source-head-files)
-  "Sources for modified and HEAD files in the current Git project.
+  "Sources for modified, staged, and HEAD files in the current Git project.
 
 This variable defines the file sources used by `consult-vc-modified-files`.
 You can customize this list to add or remove sources as needed."
   :type '(repeat (choice (const :tag "Modified locally" consult-vc-modified-files-source-files)
+                         (const :tag "Staged for commit" consult-vc-modified-files-source-staged-files)
                          (const :tag "Modified in HEAD" consult-vc-modified-files-source-head-files)))
   :group 'consult-vc-modified)
 
@@ -130,6 +136,10 @@ You can customize this list to add or remove sources as needed."
 (defface consult-vc-modified-files-face
   '((t :inherit default))
   "Face for locally modified files.")
+
+(defface consult-vc-modified-files-staged-face
+  '((t :inherit success))
+  "Face for files staged for commit.")
 
 (defvar consult-vc-modified-files-history nil
   "History for `consult-vc-modified-files`.")
@@ -149,6 +159,14 @@ You can customize this list to add or remove sources as needed."
      :history consult-vc-modified-files-history
      :state    ,#'consult-vc-modified-files--git-diff-preview
      :items (lambda () (consult-vc-modified-files-get-files "ls-files" "-z" "-m" "-o" "--exclude-standard"))))
+
+(defvar consult-vc-modified-files-source-staged-files
+  `( :name "Staged for commit"
+     :category file
+     :face consult-vc-modified-files-staged-face
+     :history consult-vc-modified-files-history
+     :state    ,#'consult-vc-modified-files--git-diff-cached-preview
+     :items (lambda () (consult-vc-modified-files-get-files "diff" "-z" "--cached" "--name-only"))))
 
 (defun consult-vc-modified-files-get-files (&rest args)
   "Run a Git command with ARGS and return the output as a list of files."
