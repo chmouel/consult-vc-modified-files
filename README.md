@@ -17,6 +17,11 @@ as well as the [consult](https://github.com/minad/consult) package for navigatio
 - 🧭 Navigate the open files with `consult`
 - 👁️ Preview the diff or the commit for the current selection
 - 🔄 Smart preview window management (no more duplicate preview windows!
+- 🧵 Narrow to the right type of files with the `consult-narrow-key` (`>` by
+  default):
+  * `h` for modified in HEAD
+  * `l` modified locally
+  * `c` staged for commit.
 
 ## 📸 Screenshot
 

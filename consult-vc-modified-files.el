@@ -166,6 +166,7 @@ You can customize this list to add or remove sources as needed."
 (defvar consult-vc-modified-files-source-head-files
   `( :name "Modified in HEAD"
      :category file
+     :narrow   ?\h
      :face consult-vc-modified-files-head-files-face
      :history consult-vc-modified-files-history
      :state ,#'consult-vc-modified-files--git-show-preview
@@ -175,6 +176,7 @@ You can customize this list to add or remove sources as needed."
   `( :name "Modified locally"
      :category file
      :face consult-vc-modified-files-face
+     :narrow   ?\l
      :history consult-vc-modified-files-history
      :state ,#'consult-vc-modified-files--git-diff-preview
      :items (lambda () (consult-vc-modified-files-get-files "ls-files" "-z" "-m" "-o" "--exclude-standard"))))
@@ -183,6 +185,7 @@ You can customize this list to add or remove sources as needed."
   `( :name "Staged for commit"
      :category file
      :face consult-vc-modified-files-staged-face
+     :narrow   ?\c
      :history consult-vc-modified-files-history
      :state    ,#'consult-vc-modified-files--git-diff-cached-preview
      :items (lambda () (consult-vc-modified-files-get-files "diff" "-z" "--cached" "--name-only"))))
