@@ -1,4 +1,4 @@
-[![MELPA](https://melpa.org/packages/consult-vc-modified-files-badge.svg)](https://melpa.org/#/consult-vc-modified-files)
+[![MELPA](https://stable.melpa.org/packages/consult-vc-modified-files-badge.svg)](https://stable.melpa.org/#/consult-vc-modified-files)
 
 # 🔍 consult-vc-modified-files
 
