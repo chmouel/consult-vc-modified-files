@@ -5,7 +5,7 @@
 `consult-vc-modified-files` provides a easy way to list Git-tracked files that have been modified, newly added, or are part of the HEAD commit in a project.
 
 It integrates with Emacs' built-in [vc](https://www.gnu.org/software/emacs/manual/html_node/emacs/Version-Control.html) and
-[project](https://github.com/emacs-mirror/emacs/blob/master/lisp/progmodes/project.el) libraries,
+[diff-mode](https://github.com/emacs-mirror/emacs/blob/master/lisp/vc/diff-mode.el) libraries,
 as well as the [consult](https://github.com/minad/consult) package for navigation.
 
 ## ✨ Features

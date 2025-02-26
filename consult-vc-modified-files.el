@@ -1,4 +1,4 @@
-;;; consult-vc-modified-files.el --- Show git modified files in a vc project with consult  -*- lexical-binding: t; -*-
+;;; consult-vc-modified-files.el --- Show git modified files with consult and vc  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2023  Chmouel Boudjnah
 
@@ -33,7 +33,6 @@
 
 ;;; Code:
 (require 'consult)
-(require 'project)
 (require 'vc-git)
 
 (defun consult-vc-files--git-preview (command preview-buffer-name &optional args)
@@ -82,7 +81,7 @@ Uses the same buffer management approach as `consult--buffer-preview`."
 
              ;; Create the preview buffer
              (let ((win (or other-win (selected-window)))
-                   (default-directory (project-root (project-current t))))
+                   (default-directory (vc-git-root default-directory)))
                (setq preview-buffer (get-buffer-create preview-buffer-name))
                (with-current-buffer preview-buffer
                  (setq buffer-read-only nil)
@@ -127,7 +126,7 @@ Uses consult--file-preview for new files."
     consult-vc-modified-files-source-added-files
     consult-vc-modified-files-source-staged-files
     consult-vc-modified-files-source-head-files)
-  "Sources for modified, added, staged, and HEAD files in the current Git project.
+  "Sources for modified, added, staged, and HEAD files in the current Git repository.
 
 This variable defines the file sources used by `consult-vc-modified-files`.
 You can customize this list to add or remove sources as needed."
@@ -194,28 +193,23 @@ You can customize this list to add or remove sources as needed."
 
 (defun consult-vc-modified-files-get-files (&rest args)
   "Run a Git command with ARGS and return the output as a list of files."
-  (let ((default-directory (project-root (project-current t))))
-    (when (vc-git-root default-directory)
-      (split-string
-       (apply #'vc-git--run-command-string "" args) "\0" t))))
+  (when-let ((vc-git-root default-directory))
+    (split-string
+     (apply #'vc-git--run-command-string "" args) "\0" t)))
 
 ;;;###autoload
 (defun consult-vc-modified-files (&optional sources)
-  "Prompt user to select a modified file from the project and open it.
+  "Prompt user to select a modified file from the repository and open it.
 SOURCES defaults to `consult-vc-modified-files-sources`."
   (interactive)
-  (let ((project (project-current t)))
-    (if project
-        (let* ((default-directory (project-root project))
-               (selected (consult--multi (or sources consult-vc-modified-files-sources)
-                                         :prompt "Choose a file: "
-                                         :history 'consult-vc-modified-files-history
-                                         :category 'file
-                                         :sort nil)))
-          (if selected
-              (find-file (expand-file-name (car selected) default-directory))
-            (message "No files selected or no modifications found.")))
-      (error "No project found"))))
+  (when-let* ((default-directory (vc-git-root default-directory))
+              (selected (consult--multi (or sources consult-vc-modified-files-sources)
+                                        :prompt "Choose a file: "
+                                        :history 'consult-vc-modified-files-history
+                                        :category 'file
+                                        :sort nil)))
+    (unless (plist-get (cdr selected) :match)
+      (consult--buffer-action (car selected)))))
 
 (provide 'consult-vc-modified-files)
 ;;; consult-vc-modified-files.el ends here
