@@ -25,6 +25,9 @@ as well as the [consult](https://github.com/minad/consult) package for navigatio
   * `l` modified locally
   * `c` staged for commit.
 
+> [!CAUTION]
+> This only works with Git repositories and no other version control systems.
+
 ## 📸 Screenshot
 
 ![image](https://github.com/chmouel/consult-vc-modified-files/assets/98980/00272a25-a0b1-4b90-b4a8-21807ead914e)
