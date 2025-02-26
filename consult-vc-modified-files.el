@@ -35,6 +35,13 @@
 (require 'consult)
 (require 'vc-git)
 
+(defcustom consult-vc-modified-files-show-description nil
+  "Option to control the display of git change description for HEAD files.
+When non-nil, show the description for each file.
+When nil, do not show the description."
+  :type 'boolean
+  :group 'consult-vc-modified)
+
 (defun consult-vc-files--git-preview (command preview-buffer-name &optional args)
   "Create preview function for git files using COMMAND.
 PREVIEW-BUFFER-NAME is the name for the preview buffer.
@@ -105,7 +112,9 @@ Uses the same buffer management approach as `consult--buffer-preview`."
 ;; Define the specialized versions using the unified function
 (defun consult-vc-modified-files--git-show-preview ()
   "Create preview function for file history, using vc-git for show."
-  (consult-vc-files--git-preview "show" "*git-show-preview*"))
+  (if consult-vc-modified-files-show-description
+      (consult-vc-files--git-preview "show" "*git-show-preview*")
+    (consult-vc-files--git-preview "diff" "*git-show-preview*" '("HEAD~"))))
 
 (defun consult-vc-modified-files--git-diff-preview ()
   "Create preview function for modified files.
