@@ -20,10 +20,10 @@ as well as the [consult](https://github.com/minad/consult) package for navigatio
 - 🔄 Smart preview window management (no more duplicate preview windows!
 - 🧵 Narrow to the right type of files with the `consult-narrow-key` (`>` by
   default):
-  * `h` for modified in HEAD
-  * `a` added (untracked) files
-  * `l` modified locally
-  * `c` staged for commit.
+  - `h` for modified in HEAD
+  - `a` added (untracked) files
+  - `l` modified locally
+  - `c` staged for commit.
 
 > [!CAUTION]
 > This only works with Git repositories and no other version control systems.
@@ -88,11 +88,27 @@ branch heads:
 
 This configuration includes:
 
-* Modified files (tracked files with changes)
-* Added files (new untracked files)
-* Staged files (changes ready for commit)
+- Modified files (tracked files with changes)
+- Added files (new untracked files)
+- Staged files (changes ready for commit)
 
 But it excludes files modified in branch heads.
+
+### Display Git Commit Messages when showing the HEAD files
+
+You can control whether to show commit message descriptions for files modified
+in HEAD with the `consult-vc-modified-files-show-description` customization
+option:
+
+```elisp
+(setq consult-vc-modified-files-show-description t)  ;; Show descriptions (default is nil)
+```
+
+When enabled, this option displays the commit message next to each file modified
+in the HEAD commit, providing more context about the changes.
+
+- When `t`: Shows commit message descriptions for HEAD files
+- When `nil`: Shows only the filenames without descriptions
 
 ### Customize Faces
 
