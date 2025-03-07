@@ -217,8 +217,8 @@ SOURCES defaults to `consult-vc-modified-files-sources`."
                                         :history 'consult-vc-modified-files-history
                                         :category 'file
                                         :sort nil)))
-    (unless (plist-get (cdr selected) :match)
-      (consult--buffer-action (car selected)))))
+    (if (plist-get (cdr selected) :match)
+        (find-file (car selected)))))
 
 (provide 'consult-vc-modified-files)
 ;;; consult-vc-modified-files.el ends here
