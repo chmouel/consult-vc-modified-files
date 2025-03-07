@@ -155,14 +155,34 @@ You can customize this list to add or remove sources as needed."
 (defvar consult-vc-modified-files-history nil
   "History for `consult-vc-modified-files`.")
 
+(defvar consult-vc-modified-files--head-commit-annotation nil
+  "Temporary storage for HEAD commit annotation.")
+
+(defun consult-vc-modified-files--head-items ()
+  "Retrieve HEAD modified files and store commit annotation."
+  (let ((files (consult-vc-modified-files-get-files 
+                "diff-tree" "-z" "--no-commit-id" "--name-only" "-r" "HEAD")))
+    (when files
+      ;; Get commit SHA and message
+      (setq consult-vc-modified-files--head-commit-annotation
+            (string-trim
+             (vc-git--run-command-string
+              "" "log" "-1" "--format=%h %s" "HEAD"))))
+    files))
+
 (defvar consult-vc-modified-files-source-head-files
-  `( :name "Modified in HEAD"
-     :category file
-     :narrow   ?\h
-     :face consult-vc-modified-files-head-files-face
-     :history consult-vc-modified-files-history
-     :state ,#'consult-vc-modified-files--git-show-preview
-     :items (lambda () (consult-vc-modified-files-get-files "diff-tree" "-z" "--no-commit-id" "--name-only" "-r" "HEAD"))))
+  `(:name "Modified in HEAD"
+          :category file
+          :narrow ?\h
+          :face consult-vc-modified-files-head-files-face
+          :history consult-vc-modified-files-history
+          :state ,#'consult-vc-modified-files--git-show-preview
+          :annotate (lambda (file)
+                      (when consult-vc-modified-files--head-commit-annotation
+                        (propertize 
+                         (concat " " consult-vc-modified-files--head-commit-annotation)
+                         'face 'consult-vc-modified-files-head-files-face)))
+          :items consult-vc-modified-files--head-items))
 
 (defvar consult-vc-modified-files-source-files
   `( :name "Modified locally"
