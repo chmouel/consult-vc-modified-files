@@ -202,6 +202,8 @@ You can customize this list to add or remove sources as needed."
   "Prompt user to select a modified file from the repository and open it.
 SOURCES defaults to `consult-vc-modified-files-sources`."
   (interactive)
+  (unless (vc-git-root default-directory)
+    (user-error "Not in a Git repository"))
   (when-let* ((default-directory (vc-git-root default-directory))
               (selected (consult--multi (or sources consult-vc-modified-files-sources)
                                         :prompt "Choose a file: "
