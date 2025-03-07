@@ -1,11 +1,11 @@
 ;;; consult-vc-modified-files.el --- Show git modified files with consult and vc  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2023  Chmouel Boudjnah
+;; Copyright (C) 2025  Chmouel Boudjnah
 
 ;; Author: Chmouel Boudjnah <chmouel@chmouel.com>
 ;; Keywords: vc, convenience
 ;; Created: 2023
-;; Version: 0.0.9
+;; Version: 0.1.0
 ;; Package-Requires: ((emacs "28.1") (consult "0.9"))
 ;; Keywords: convenience
 ;; Homepage: https://github.com/chmouel/consult-vc-modified-files
