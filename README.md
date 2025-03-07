@@ -18,6 +18,7 @@ as well as the [consult](https://github.com/minad/consult) package for navigatio
 - 🧭 Navigate the open files with `consult`
 - 👁️ Preview the diff or the commit for the current selection
 - 🔄 Smart preview window management (no more duplicate preview windows!
+- 🔍 Show the commit message of the modified files in HEAD
 - 🧵 Narrow to the right type of files with the `consult-narrow-key` (`>` by
   default):
   - `h` for modified in HEAD
@@ -30,7 +31,7 @@ as well as the [consult](https://github.com/minad/consult) package for navigatio
 
 ## 📸 Screenshot
 
-![image](https://github.com/chmouel/consult-vc-modified-files/assets/98980/00272a25-a0b1-4b90-b4a8-21807ead914e)
+![screenshot-consult-vc-modified-files](https://github.com/user-attachments/assets/6de35d17-4598-4727-a7b2-07dde993f002)
 
 ### Preview with git show the HEAD files and git diff the modified files
 
