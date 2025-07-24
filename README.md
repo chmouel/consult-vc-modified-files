@@ -38,6 +38,10 @@ as well as the [consult](https://github.com/minad/consult) package for navigatio
 
 <https://github.com/user-attachments/assets/daa339f0-0311-4444-a3a7-a720335b6e4d>
 
+### Browse modified files of a commit with `consult-vc-log-select-files`
+
+<https://github.com/user-attachments/assets/8b452648-6298-45d7-8290-6138d3b0cab2>
+
 ## 📥 Installation
 
 ### Using `use-package` and [MELPA](https://melpa.org/)
