@@ -212,6 +212,29 @@
   (should (memq 'consult-vc-modified-files-source-staged-files consult-vc-modified-files-sources))
   (should (memq 'consult-vc-modified-files-source-head-files consult-vc-modified-files-sources)))
 
+(ert-deftest consult-vc-log-select-files-test ()
+  "Test selecting a commit and opening one of its files."
+  (let ((order 0)
+        opened)
+    (cl-letf (((symbol-function 'vc-git-root)
+               (lambda (dir) 
+                 (expand-file-name (or dir default-directory))))
+              ((symbol-function 'vc-git--run-command-string)
+               (lambda (&rest args)
+                 (pcase args
+                   (`("" "log" "--pretty=format:%h %s" "--date-order")
+                    "abc123 Commit one\n")
+                   (`("" "diff-tree" "-z" "--no-commit-id" "--name-only" "-r" "abc123")
+                    "file1.txt\0"))))
+              ((symbol-function 'consult--read)
+               (lambda (cands &rest args)
+                 (setq order (1+ order))
+                 (car cands)))
+              ((symbol-function 'find-file)
+               (lambda (file) (setq opened file))))
+      (consult-vc-log-select-files)
+      (should (equal opened "file1.txt")))))
+
 ;; Integration test (commented out by default as it requires user interaction)
 ;; Uncomment to run manually
 ;; (ert-deftest consult-vc-modified-files-test-interactive ()

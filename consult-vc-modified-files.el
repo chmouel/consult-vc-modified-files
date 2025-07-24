@@ -242,5 +242,55 @@ SOURCES defaults to `consult-vc-modified-files-sources`."
     (if (plist-get (cdr selected) :match)
         (find-file (car selected)))))
 
+;;;###autoload
+(defun consult-vc-log-commit-file-preview (sha)
+  "Create preview function for files in a specific commit.
+SHA is the commit hash to show diff for."
+  (lambda (action cand)
+    (pcase action
+      ('return nil)
+      ('exit
+       (when-let ((buf (get-buffer "*git-commit-diff-preview*")))
+         (kill-buffer buf)))
+      ('preview
+       (when (and cand sha (not (string-empty-p cand)))
+         (let ((buf (get-buffer-create "*git-commit-diff-preview*"))
+               (default-directory (vc-git-root default-directory)))
+           (with-current-buffer buf
+             (setq buffer-read-only nil)
+             (erase-buffer)
+             ;; Show the diff between the parent commit and this commit for the specific file
+             (vc-git-command buf t nil "diff" (concat sha "^.." sha) "--" cand)
+             (goto-char (point-min))
+             (diff-mode)  ;; Apply diff-mode for syntax highlighting
+             (setq buffer-read-only t))
+           (with-selected-window (or (consult--original-window) (selected-window))
+             (switch-to-buffer buf t))))))))
+
+(defun consult-vc-log-select-files ()
+  "Select a commit and then choose a file from that commit.
+Shows the most recent commits first."
+  (interactive)
+  (unless (vc-git-root default-directory)
+    (user-error "Not in a Git repository"))
+  (let* ((default-directory (vc-git-root default-directory))
+         (commits (split-string
+                   (vc-git--run-command-string
+                    "" "log" "--pretty=format:%h %s" "--date-order")
+                   "\n" t))
+         (commit (consult--read commits :sort nil :prompt "Choose commit: "))
+         (sha (car (split-string commit)))
+         (files (split-string
+                 (vc-git--run-command-string
+                  "" "diff-tree" "-z" "--no-commit-id" "--name-only" "-r" sha)
+                 "\0" t))
+         (file (consult--read files 
+                              :prompt "Choose file: " 
+                              :category 'file
+                              :state (consult-vc-log-commit-file-preview sha))))
+    (when file
+      (find-file file))))
+
 (provide 'consult-vc-modified-files)
 ;;; consult-vc-modified-files.el ends here
+

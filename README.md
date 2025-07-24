@@ -14,10 +14,11 @@ as well as the [consult](https://github.com/minad/consult) package for navigatio
 - 📦 List files from the HEAD commit
 - 🆕 List newly added (untracked) files separately
 - 📋 Show files **staged for commit** in the Git staging area
-- 🛠️ Customize sources for specific use cases
+- �️ Select and explore files from **any past commit** with diff previews
+- �🛠️ Customize sources for specific use cases
 - 🧭 Navigate the open files with `consult`
 - 👁️ Preview the diff or the commit for the current selection
-- 🔄 Smart preview window management (no more duplicate preview windows!
+- 🔄 Smart preview window management (no more duplicate preview windows!)
 - 🔍 Show the commit message of the modified files in HEAD
 - 🧵 Narrow to the right type of files with the `consult-narrow-key` (`>` by
   default):
@@ -44,11 +45,14 @@ as well as the [consult](https://github.com/minad/consult) package for navigatio
 ```elisp
 (use-package consult-vc-modified-files
   :bind
-  ;; choose any other key binding you prefer
-  ("C-x v /" . consult-vc-modified-files))
+  ;; choose any other key bindings you prefer
+  (("C-x v /" . consult-vc-modified-files)
+   ("C-x v ." . consult-vc-log-select-files)))
 ```
 
 ## 🚀 Usage
+
+### Browsing Modified Files
 
 Call the interactive function `consult-vc-modified-files`, or use a key binding
 like `C-x v /` (if configured with the configuration above).
@@ -60,12 +64,23 @@ When invoked, the command show a prompt for selecting files based on customizabl
 - 📋 **Staged for commit**: Lists files added to the Git staging area
 - 📦 **Modified in HEAD**: Lists files modified in the HEAD commit
 
+### Browsing Files from a Specific Commit
+
+Call the interactive function `consult-vc-log-select-files` to:
+
+1. Select a commit from the repository history
+2. Choose a file that was modified in that commit
+3. See a live diff preview of the changes made to that file in the commit
+
+This is useful for reviewing changes from past commits without having to use a separate git tool.
+
 You can customize the available sources using the
 `consult-vc-modified-files-sources` variable.
 
 ## 🔮 Preview Features
 
 - 📊 **Live diff preview**: See the changes in each file as you navigate through options
+- 🧠 **Commit diff preview**: View exact changes made to files in any historical commit
 - 🌈 **Syntax highlighting**: Previews use diff-mode
 
 ## ⚙️ Customization
